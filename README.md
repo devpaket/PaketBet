@@ -27,7 +27,7 @@
 - CryptoPay API токен
 
 1. Клонировать репозиторий:
-git clone https://github.com/yourusername/telegram-casino-bot.git
+git clone https://github.com/devpaket/PaketBet.git
 cd telegram-casino-bot
 
 2. Установить зависимости:
@@ -63,4 +63,4 @@ python main.py
 MIT License. Подробнее в файле LICENSE.
 
 📧 Контакты
-По вопросам сотрудничества: @ваш_никнейм
+По вопросам сотрудничества: https://t.me/dev_paket
