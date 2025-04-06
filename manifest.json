@@ -1,0 +1,96 @@
+{
+  "files": [
+    {
+      "path": "casino_bot.db",
+      "hash": "3620451a12e34fba78879fc45f6829eed65111b9d324a2be06a3b0613924306e"
+    },
+    {
+      "path": "gm.py",
+      "hash": "caf46023bad524e5d580d683117f17761597d16af7857aa801489c2288f8881d"
+    },
+    {
+      "path": "install.py",
+      "hash": "acc6387fb8c065870ad213f2212b25575c3671df79c118241e29918f795a04d2"
+    },
+    {
+      "path": "keyboard.py",
+      "hash": "1c8efb061753e03a2a54326f153b873c98c4adef8302949f83bc90d8d3bc7b6e"
+    },
+    {
+      "path": "main.py",
+      "hash": "2d26641b62da230c0ad390aa095963acd23c96a584050c74cdc20d5cbc310628"
+    },
+    {
+      "path": "README.md",
+      "hash": "40547db7afd18d461cb2f34e5a87aeecce69529102e605572ea88b2bf33720b5"
+    },
+    {
+      "path": "requirements.txt",
+      "hash": "5e9e0c1daf9724b622133c5588d9670ad2944d651bdc5eddc62c10028f380799"
+    },
+    {
+      "path": "start.py",
+      "hash": "1cf88baa63f351864a2d8a7518ebf7b92b9d7431e4699f806df8f6673140c565"
+    },
+    {
+      "path": "res/bolshe.jpg",
+      "hash": "86aae1b882734c494f2b676267b8b2172324a374b541dc74bfab43c15996ce26"
+    },
+    {
+      "path": "res/chet.jpg",
+      "hash": "742fa11231878a2964f1b6d0874d5821789286803d437c7e75f2561d667ff949"
+    },
+    {
+      "path": "res/Cruinn.ttf",
+      "hash": "ea61ceb41e4a1cc19d4ad4ec4e20ee2fb8f659f6e7842757a7e83286efc823fb"
+    },
+    {
+      "path": "res/lose.jpg",
+      "hash": "28de5e24c693e42d253dc87ecda303fc174cf4f64a801e014c30cf9ca48c11c9"
+    },
+    {
+      "path": "res/menche.jpg",
+      "hash": "e1efc24269ea65ea1400a66f3205d1ece4e1896ab5f528b98574333ec550239e"
+    },
+    {
+      "path": "res/nechet.jpg",
+      "hash": "6a94d1543c9256cc01b182a1a07923bd911f433298c99b1cbef964fd4baf9769"
+    },
+    {
+      "path": "res/out.jpg",
+      "hash": "2f969158f5390d05a6572c19e5f47dce89dfe4bda2855bcd726edc6c697e4685"
+    },
+    {
+      "path": "res/paid.jpg",
+      "hash": "4cd7a6dc9e22dacf9975cdf8de915204cb6de422e8347f9dcd2517a702a5eb42"
+    },
+    {
+      "path": "res/photo_2025-01-28_16-03-51.jpg",
+      "hash": "0e78178242ac7d830edb391e705c2ad3bc9b740d1ef738e90b18b77ba66b083c"
+    },
+    {
+      "path": "res/profile.jpg",
+      "hash": "12c47e2bec34a48a00712abcd1eb8bd8475adf613b7c5f6582a0d9fc91154188"
+    },
+    {
+      "path": "res/shrift.ttf",
+      "hash": "bd1767db54c79915176e797cde0e84bce85347016b36e87511ec95abfa9b41c3"
+    },
+    {
+      "path": "res/temp_image.jpg",
+      "hash": "0d77c45f0d91647c727d551a1f9ab0fb5e0790af4f35dc5e364683dd19ca2e8a"
+    },
+    {
+      "path": "res/win.jpg",
+      "hash": "59458df1d4d9be685228bf05514142e419d12cfe7cfe65c13d0d80f154c491e7"
+    },
+    {
+      "path": "__pycache__/config.cpython-311.pyc",
+      "hash": "5b564b888c03cca5e11b2b2ac345bce5149163f081190b45337a1b1650cc7e2a"
+    },
+    {
+      "path": "__pycache__/keyboard.cpython-311.pyc",
+      "hash": "887f5fbc3a7fcf73bd6b3db82e50de64de628aae862718994970ff965caa92c7"
+    }
+  ]
+}
