@@ -1,14 +1,6 @@
 {
   "files": [
     {
-      "path": "casino_bot.db",
-      "hash": "3620451a12e34fba78879fc45f6829eed65111b9d324a2be06a3b0613924306e"
-    },
-    {
-      "path": "gm.py",
-      "hash": "caf46023bad524e5d580d683117f17761597d16af7857aa801489c2288f8881d"
-    },
-    {
       "path": "install.py",
       "hash": "acc6387fb8c065870ad213f2212b25575c3671df79c118241e29918f795a04d2"
     },
