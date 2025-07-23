@@ -11,6 +11,7 @@ router = Router()
 
 config = load_config()
 db = Database(config.bot.database)
+print("[Log] Router Menu запущен")
 
 @router.message(Command("start"))
 async def cmd_start(message: Message):

@@ -6,6 +6,10 @@ from database.setup import Database
 
 from handlers.menu import router as menu_router
 from handlers.profile import router as profile_router
+from handlers.donation import router as donate_router
+from handlers.exchange import router as exchange_router
+
+from utils.gmrate import update_gmrate
 
 config = load_config()
 
@@ -17,9 +21,13 @@ async def main():
     await db.connect()
     await db.init_tables()
 
-#Сюда вставить роутеры
-    dp.include_routers(menu_router,
-                       profile_router)
+    dp.include_router(menu_router)
+    dp.include_router(profile_router)
+    dp.include_router(donate_router)
+    dp.include_router(exchange_router)
+
+    asyncio.create_task(update_gmrate())
+    print("[Log] Обновление курса инициализированно")
 
     try:
         await dp.start_polling(bot)
