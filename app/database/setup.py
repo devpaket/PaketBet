@@ -13,8 +13,13 @@ class Database:
         await cursor.close()
         return rows
 
+    async def fetchrow(self, query: str, params: tuple = ()):
+        async with self._conn.execute(query, params) as cursor:
+            return await cursor.fetchone()
+
     async def connect(self):
         self._conn = await aiosqlite.connect(self.db_path)
+        self._conn.row_factory = aiosqlite.Row  # 👈 ВКЛЮЧАЕМ доступ по ключам
         await self._conn.execute("PRAGMA foreign_keys = ON;")
         await self._conn.commit()
 

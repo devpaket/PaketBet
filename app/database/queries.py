@@ -34,14 +34,24 @@ async def get_user_by_id(conn: Connection, user_id: int) -> Optional[dict]:
         return row
     
 
-async def get_last_bonus_time(conn: Connection, user_id: int) -> datetime | None:
-    async with conn.execute("SELECT last_bonus_at FROM users WHERE user_id = ?", (user_id,)) as cursor:
+async def get_last_bonus_time(conn: Connection, user_id: int, bonus_type: str) -> Optional[datetime]:
+    query = """
+    SELECT claimed_at
+    FROM bonus_claims
+    WHERE user_id = ? AND type = ?
+    ORDER BY claimed_at DESC
+    LIMIT 1
+    """
+    async with conn.execute(query, (user_id, bonus_type)) as cursor:
         row = await cursor.fetchone()
         return datetime.fromisoformat(row[0]) if row and row[0] else None
 
-async def update_last_bonus_time(conn: Connection, user_id: int):
-    await conn.execute(
-        "UPDATE users SET last_bonus_at = ? WHERE user_id = ?",
-        (datetime.now().isoformat(), user_id)
-    )
+
+async def update_last_bonus_time(conn: Connection, user_id: int, bonus_type: str) -> None:
+    now = datetime.now().isoformat()
+    query = """
+    INSERT INTO bonus_claims (user_id, type, claimed_at)
+    VALUES (?, ?, ?)
+    """
+    await conn.execute(query, (user_id, bonus_type, now))
     await conn.commit()
