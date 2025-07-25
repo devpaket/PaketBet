@@ -8,7 +8,7 @@ def donate_keyboards(user_id) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text="⭐ Купить DC ❤️", callback_data="donation_buy:stars")
             ],
             [
-                InlineKeyboardButton(text="💱 Обменник", callback_data=f"exchange_menu:{user_id}")
+                InlineKeyboardButton(text="💱 Обменник", callback_data=f"exchangemenu:{user_id}")
             ]
         ]
     )

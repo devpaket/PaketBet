@@ -23,16 +23,29 @@ print("[Log] Router Profile запущен")
 async def balance_handler(message: Message):
     await db.connect()
     user_id = message.from_user.id
-    query = """
-        SELECT balance, games_played, duels_won, coins_lost
+
+    user_query = """
+        SELECT balance, duels_won, coins_lost
         FROM users
         WHERE user_id = ?
     """
-    async with db._conn.execute(query, (user_id,)) as cursor:
-        row = await cursor.fetchone()
+    async with db._conn.execute(user_query, (user_id,)) as cursor:
+        user_row = await cursor.fetchone()
 
-    if row:
-        balance, games_played, duels_won, coins_lost = row
+    games_query = """
+        SELECT COUNT(*) as games_played
+        FROM games
+        WHERE user_id = ?
+    """
+    async with db._conn.execute(games_query, (user_id,)) as cursor:
+        games_row = await cursor.fetchone()
+
+    await db.close()
+
+    if user_row and games_row:
+        balance, duels_won, coins_lost = user_row
+        games_played = games_row["games_played"]
+
         response_text = (
             f"<i>💰Баланс: {balance} PaketCoin</i>\n"
             f"<code>·····················</code>\n"
@@ -40,10 +53,10 @@ async def balance_handler(message: Message):
             f"<i>⚔️ Выиграно дуэлей: {duels_won}</i>\n"
             f"<i>🗿 Проиграно PaketCoin: {coins_lost}</i>"
         )
-        await db.close()
         await message.answer(response_text, parse_mode=ParseMode.HTML)
     else:
         await message.answer("Пользователь не найден в базе данных.")
+
 
 @router.message(or_f(Command("bonus"), F.text.casefold() == "бонус"))
 async def bonus_handler(message: Message):
@@ -129,7 +142,6 @@ async def process_give(message: Message, amount_str: str = None):
 
     await db.connect()
 
-    # Проверка типа чата
     if message.chat.type not in ("group", "supergroup"):
         await message.answer(
             "<i>❗️Эта команда работает только в чате с ботом!</i>",
@@ -140,7 +152,6 @@ async def process_give(message: Message, amount_str: str = None):
         await db.close()
         return
 
-    # Проверка, что команда — ответ на сообщение пользователя-получателя
     if not message.reply_to_message:
         await message.answer(
             "❗️ Чтобы перевести, нужно ответить на сообщение пользователя, которому хотите отправить средства.",
@@ -177,7 +188,6 @@ async def process_give(message: Message, amount_str: str = None):
             return
         amount_str = args[1].lower()
 
-    # Проверка баланса отправителя
     async with db._conn.execute("SELECT balance FROM users WHERE user_id = ?", (sender_id,)) as cursor:
         sender_row = await cursor.fetchone()
     if not sender_row:
@@ -189,7 +199,6 @@ async def process_give(message: Message, amount_str: str = None):
         await db.close()
         return
 
-    # Проверка, что получатель есть в базе
     async with db._conn.execute("SELECT 1 FROM users WHERE user_id = ?", (recipient_id,)) as cursor:
         recipient_row = await cursor.fetchone()
     if not recipient_row:
@@ -238,11 +247,9 @@ async def process_give(message: Message, amount_str: str = None):
         await db.close()
         return
 
-    # Обновление балансов
     await db._conn.execute("UPDATE users SET balance = balance - ? WHERE user_id = ?", (total_deduction, sender_id))
     await db._conn.execute("UPDATE users SET balance = balance + ? WHERE user_id = ?", (net_amount, recipient_id))
 
-    # Логирование транзакции в таблицу transfers
     sent_at = datetime.utcnow().isoformat()
     await db._conn.execute(
         """
@@ -420,21 +427,26 @@ async def profile_handler(message: Message):
     user_name = user.first_name
     name_link = f"<a href='https://t.me/{username}'>{user_name}</a>"
 
-    # Получаем данные из БД
     rows = await db.fetchall("SELECT * FROM users WHERE user_id = ?", (user_id,))
     user = rows[0] if rows else None
     if not user:
         await message.answer("❗️Профиль не найден.")
         return
+    
+    games_query = """
+        SELECT COUNT(*) as games_played
+        FROM games
+        WHERE user_id = ?
+    """
+    async with db._conn.execute(games_query, (user_id,)) as cursor:
+        games_row = await cursor.fetchone()
+        played = games_row["games_played"] if games_row else 0
 
-    # Расчёты и форматирование
-    played = user["games_played"]
-    wins = user["duels_won"]
+    wins = user["coins_win"]
     lost = user["coins_lost"]
     balance = user["balance"]
     donatecoin = user["donatecoin"]
 
-    # Место в топе по балансу
     query = """
     SELECT COUNT(*) + 1 AS rank
     FROM users
@@ -443,10 +455,8 @@ async def profile_handler(message: Message):
     row = await db.fetchrow(query, (balance,))
     place = row["rank"] if row else "—"
 
-    # Формат даты
     date = datetime.fromisoformat(user["registered_at"]).strftime("%d-%m-%Y %H:%M")
 
-    # Ответ
     text = (
         f"🆔 <i>Профиль: <code>{user_id}</code></i>\n"
         f"<code>·····················</code>\n"
