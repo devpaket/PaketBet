@@ -5,7 +5,7 @@ def exchange_direction_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="🟢 Купить (Недоступно)", callback_data="exchange:pc_to_dcс"),
+                InlineKeyboardButton(text="🟢 Купить (Недоступно)", callback_data="ne_trogai_eblan"),#exchange:pc_to_dс
                 InlineKeyboardButton(text="🔴 Продать", callback_data="exchange:dc_to_pc"),
 
             ],

@@ -72,3 +72,26 @@ CREATE TABLE IF NOT EXISTS bonus_claims (
 CREATE INDEX IF NOT EXISTS idx_bonus_claims_user_id ON bonus_claims(user_id);
 CREATE INDEX IF NOT EXISTS idx_bonus_claims_type ON bonus_claims(type);
 """
+
+BANK_ACCOUNTS_TABLE_SCHEMA = """
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    user_id INTEGER PRIMARY KEY,
+    balance INTEGER NOT NULL DEFAULT 0,
+    deposit INTEGER NOT NULL DEFAULT 0,
+    deposit_start TIMESTAMP,
+    last_interest TIMESTAMP,
+    daily_limit INTEGER NOT NULL DEFAULT 0,
+    last_transfer TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+CREATE INDEX IF NOT EXISTS idx_bank_user_id ON bank_accounts(user_id);
+"""
+
+
+BANK_TREASURY_TABLE_SCHEMA = """
+CREATE TABLE IF NOT EXISTS bank_treasury (
+    id INTEGER PRIMARY KEY CHECK(id = 1),
+    balance INTEGER NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+"""

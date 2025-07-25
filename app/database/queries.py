@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 from aiosqlite import Connection
+from database.setup import Database
 
 #Тут пишите Функции базы данных
 
@@ -55,3 +56,23 @@ async def update_last_bonus_time(conn: Connection, user_id: int, bonus_type: str
     """
     await conn.execute(query, (user_id, bonus_type, now))
     await conn.commit()
+
+async def get_user(db: Database, user_id: int):
+    query = "SELECT * FROM users WHERE user_id = ?"
+    return await db.fetchrow(query, (user_id,))
+
+
+async def update_user_balance(self, user_id: int, new_balance: int):
+    await self._conn.execute(
+        "UPDATE users SET balance = ? WHERE user_id = ?",
+        (new_balance, user_id)
+    )
+    await self._conn.commit()
+
+async def get_bank_account(db: Database, user_id: int):
+    query = "SELECT * FROM bank_accounts WHERE user_id = ?"
+    return await db.fetchrow(query, (user_id,))
+
+async def get_deposit_account(db: Database, user_id: int):
+    query = "SELECT * FROM deposit_accounts WHERE user_id = ?"
+    return await db.fetchrow(query, (user_id,))

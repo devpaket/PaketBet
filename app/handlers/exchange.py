@@ -31,7 +31,7 @@ def format_number(n: float) -> str:
     else:
         return str(n)
 
-async def _exchange_core(message: Message, user_id: int):
+async def _exchange_core(message: Message, user_id: int, state: FSMContext):
     await db.connect()
     async with db._conn.execute("SELECT donatecoin, balance FROM users WHERE user_id = ?", (user_id,)) as cursor:
         row = await cursor.fetchone()
@@ -69,12 +69,14 @@ async def _exchange_core(message: Message, user_id: int):
         reply_markup=exchange_direction_kb(),
         parse_mode=ParseMode.HTML
     )
+    # Устанавливаем состояние после показа клавиатуры
+    await state.set_state(ExchangeStates.waiting_for_direction)
 
 @router.message(or_f(Command("exchange"), F.text.casefold() == "обмен"))
 async def cmd_exchange_start(message: Message, state: FSMContext):
-    await _exchange_core(message, message.from_user.id)
+    await _exchange_core(message, message.from_user.id, state)
 
-@router.callback_query(F.data.startswith("exchange_menu:"))
+@router.callback_query(F.data.startswith("exchangemenu:"))
 async def callback_exchange_menu(callback: CallbackQuery, state: FSMContext):
     parts = callback.data.split(":")
     if len(parts) != 2:
@@ -90,9 +92,9 @@ async def callback_exchange_menu(callback: CallbackQuery, state: FSMContext):
 
     await callback.answer()
     await state.clear()
-    await _exchange_core(callback.message, actual_user_id)
-    await state.set_state(ExchangeStates.waiting_for_direction)
 
+    await _exchange_core(callback.message, actual_user_id, state)
+    # state устанавливается внутри _exchange_core
 
 @router.callback_query(
     F.data.startswith("exchange:"),
@@ -169,7 +171,7 @@ async def process_exchange_amount(message: Message, state: FSMContext):
     user = message.from_user
     username = user.username
     first_name = user.first_name
-    name_link = f"<a href='https://t.me/{username}'>{first_name}</a>"
+    name_link = f"<a href='https://t.me/{username}'>{first_name}</a>" if username else first_name
 
     confirm_text = (
         f"<i>{name_link}, Подтвердите обмен:</i>\n"
@@ -185,9 +187,9 @@ async def process_exchange_amount(message: Message, state: FSMContext):
         pass
 
     await message.answer(
-        confirm_text, 
-        reply_markup=get_confirm_keyboard(), 
-        parse_mode=ParseMode.HTML, 
+        confirm_text,
+        reply_markup=get_confirm_keyboard(),
+        parse_mode=ParseMode.HTML,
         disable_web_page_preview=True
     )
     await state.set_state(ExchangeStates.waiting_for_confirmation)
